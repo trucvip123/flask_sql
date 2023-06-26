@@ -48,7 +48,7 @@ def create_user_json():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({'message': 'User created successfully.'}), 201
+    return jsonify({'status code': '200'}), 201
 
 @app.route('/insert_users', methods=['POST'])
 def create_user():
