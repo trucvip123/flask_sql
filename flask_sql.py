@@ -6,6 +6,9 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 
+# API key and secret key
+API_KEY = 123
+SECRET_KEY = 234
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -14,7 +17,6 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User {self.name}>'
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -32,7 +34,6 @@ def index():
 def list_names():
     users = User.query.all()
     names = [user.name for user in users]
-    # return render_template('names.html', names=names)
     return jsonify(names)
 
 @app.route('/insert_users_json', methods=['POST'])
@@ -43,6 +44,14 @@ def create_user_json():
 
     if not name or not email:
         return jsonify({'error': 'Name and email are required.'}), 400
+
+    print(request.headers.get('X-API-Key'))
+    print(API_KEY)
+    print(request.headers.get('X-Secret-Key'))
+    print(SECRET_KEY)
+    # Perform authentication with API key and secret key
+    if str(request.headers.get('X-API-Key')) != str(API_KEY) or str(request.headers.get('X-Secret-Key')) != str(SECRET_KEY):
+        return jsonify({'error': 'Invalid API credentials.'}), 401
 
     new_user = User(name=name, email=email)
     db.session.add(new_user)
@@ -57,6 +66,10 @@ def create_user():
 
     if not name or not email:
         return jsonify({'error': 'Name and email are required.'}), 400
+
+    # Perform authentication with API key and secret key
+    if request.headers.get('X-API-Key') != API_KEY or request.headers.get('X-Secret-Key') != SECRET_KEY:
+        return jsonify({'error': 'Invalid API credentials.'}), 401
 
     new_user = User(name=name, email=email)
     db.session.add(new_user)
