@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'webapp-demo-trucnv'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_11A9669BB0F94C2992C93E8957A55631 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E4267630F9C54B95AE500CED29D689DD }}
